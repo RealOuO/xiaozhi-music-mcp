@@ -27,30 +27,26 @@ cd /Users/a1234/Documents/music
 pip3 install -r requirements.txt
 ```
 
-### 3. 测试服务器
+### 3. 启动（本地）
+
+小智的接入点是**反向连接**的：它只会主动连出来并发请求，所以必须由 `mcp_pipe.py` 去连接入点、再把请求转发给本地的 stdio 服务。
 
 ```bash
-python3 music_mcp_server.py
+export MCP_ENDPOINT='wss://api.xiaozhi.me/mcp/?token=...'   # 控制台里的 MCP 接入点地址
+python3 mcp_pipe.py music_mcp_server.py
 ```
 
-### 4. 小智AI配置
+### 4. 云端部署（Railway）
 
-#### 步骤1：获取MCP接入点
-1. 登录 [xiaozhi.me](https://xiaozhi.me) 控制台
-2. 进入智能体的配置角色页面
-3. 在右下角找到该智能体专属的MCP接入点
+仓库已经配好，直接推代码即可，但要在 Railway 的 Variables 里加上：
 
-#### 步骤2：配置MCP服务器
-在小智AI控制台中添加以下配置：
+| 变量 | 值 |
+|------|-----|
+| `MCP_ENDPOINT` | 小智控制台里的 MCP 接入点地址（含 token） |
 
-```json
-{
-  "name": "免费音乐服务器",
-  "command": "python3",
-  "args": ["/Users/a1234/Documents/music/music_mcp_server.py"],
-  "transport": "stdio"
-}
-```
+启动命令固定为 `python3 mcp_pipe.py music_mcp_server.py`（已在 `railway.json` / `Dockerfile` 中设置）。不需要在本机常开电脑。
+
+> 注意：`MCP_ENDPOINT` 是凭证，不要写进代码或提交到仓库。
 
 ## 使用方法
 
